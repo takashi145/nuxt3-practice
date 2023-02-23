@@ -4,7 +4,17 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   const { id } = event.context.params;
-  return prisma.post.findFirst({
+  
+  const post = await prisma.post.findFirst({
     where: { id: parseInt(id) },
   });
-})
+
+  if(!post) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "not found"
+    })
+  }
+  
+  return post;
+ })

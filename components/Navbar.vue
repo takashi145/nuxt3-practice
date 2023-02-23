@@ -15,7 +15,7 @@ const logout = async () => {
         <AppLogo />
       </NuxtLink>
       <nav v-if="user" class="md:ml-auto flex flex-wrap items-center text-base justify-center">
-        <NuxtLink to="/" class="mr-5 hover:text-gray-900">Home</NuxtLink>
+        <NuxtLink to="/post" class="mr-5 hover:text-gray-900">PostList</NuxtLink>
       </nav>
       <button v-if="user" @click="logout" class="inline-flex items-center bg-gray-200 border-0 py-1 px-3 focus:outline-none hover:bg-gray-300 rounded text-base mt-4 md:mt-0">
         Logout

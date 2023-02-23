@@ -42,6 +42,7 @@ const create = async () => {
 </script>
 <template>
   <div class="m-8">
+    <NuxtLink to="/post" class="text-blue-400 hover:text-blue-500">Back</NuxtLink>
     <form @submit.prevent="create" class="mb-8">
       <div class="mb-3">
         <InputLabel>Title</InputLabel>
