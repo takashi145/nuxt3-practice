@@ -1,3 +1,3 @@
 <template>
-  <span class="text-xl">NuxtApp</span>
+  <span class="text-xl">CrudSample</span>
 </template>

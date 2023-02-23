@@ -1,6 +1,4 @@
 <script setup>
-import { ref } from 'vue';
-
 definePageMeta({
   middleware: 'auth'
 })
@@ -15,7 +13,10 @@ const form = ref({
 
 const errors = ref({});
 
+const loading = ref(false);
+
 const create = async () => {
+  loading.value = true;
   const fileName = Math.floor(Math.random() * 1000000000000000);
   const { data, error } = await supabase.storage.from("images").upload("public/" + fileName, form.value.image);
   if(error) {
@@ -37,13 +38,16 @@ const create = async () => {
       });
     }
     await supabase.storage.from("images").remove(data.path);
+  }finally{
+    loading.value = false;
   }
 }
 </script>
 <template>
+  <Loading :loading="loading" />
   <div class="m-8">
-    <NuxtLink to="/post" class="text-blue-400 hover:text-blue-500">Back</NuxtLink>
-    <form @submit.prevent="create" class="mb-8">
+    <NuxtLink to="/post" class="text-blue-400 hover:text-blue-500 hover:underline">Back</NuxtLink>
+    <form @submit.prevent="create" class="my-8 w-full md:w-2/3 mx-auto">
       <div class="mb-3">
         <InputLabel>Title</InputLabel>
         <Input type="text" v-model="form.title" />

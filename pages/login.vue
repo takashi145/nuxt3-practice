@@ -17,7 +17,9 @@ const login = async () => {
 }
 
 watchEffect(async () => {
-  if(user.value ) await navigateTo('/');
+  if(user.value) {
+    await navigateTo('/post');
+  }
 })
 
 </script>

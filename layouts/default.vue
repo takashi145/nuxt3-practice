@@ -5,6 +5,8 @@ import Navbar from "~~/components/Navbar.vue";
 <template>
   <div class="h-screen">
     <Navbar />
-    <slot />
+    <div class="max-w-5xl mx-auto">
+      <slot />
+    </div>
   </div>
 </template>
