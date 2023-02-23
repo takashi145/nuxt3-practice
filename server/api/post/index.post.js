@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 const Post = Joi.object().keys({
   title: Joi.string().max(30).required(),
   description: Joi.string().required(),
-  image: Joi.string(),
+  image: Joi.string().required(),
 });
 
 export default defineEventHandler(async (event) => {
