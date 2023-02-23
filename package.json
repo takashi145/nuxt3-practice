@@ -12,6 +12,8 @@
     "nuxt": "^3.2.0"
   },
   "dependencies": {
-    "@nuxtjs/supabase": "^0.3.0"
+    "@nuxtjs/supabase": "^0.3.0",
+    "@prisma/client": "4.10.1",
+    "prisma": "^4.10.1"
   }
 }

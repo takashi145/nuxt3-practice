@@ -3,16 +3,17 @@ const user = useSupabaseUser();
 const supabase = useSupabaseClient();
 
 const logout = async () => {
-  const {error} = supabase.auth.signOut();
-  await navigateTo('/login');
+  await supabase.auth.signOut();
+  user.value = null;
+  return navigateTo('/login');
 }
 </script>
 <template>
   <header class="text-gray-600 body-font shadow-lg">
     <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-      <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
-        <span class="text-xl">AppName</span>
-      </a>
+      <NuxtLink to="/" class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+        <AppLogo />
+      </NuxtLink>
       <nav v-if="user" class="md:ml-auto flex flex-wrap items-center text-base justify-center">
         <NuxtLink to="/" class="mr-5 hover:text-gray-900">Home</NuxtLink>
       </nav>
