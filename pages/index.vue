@@ -1,40 +1,72 @@
 <script setup>
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 
 definePageMeta({
   middleware: 'auth'
 })
 
-const { data: posts } = await useFetch('/api/post');
+const supabase = useSupabaseClient();
 
 const form = reactive({
   title: '',
   description: '',
+  image: null,
 });
 
+const errors = ref({});
+
+const imageUpload = async e => {
+  form.image = e.target.files[0];
+}
+
 const create = async () => {
-  await $fetch('/api/post', {
-    method: 'POST',
-    body: form
-  })
+  const fileName = Math.floor(Math.random() * 10000000000000000000);
+  const { data, error } = await supabase.storage.from("images").upload("public/" + fileName, form.image);
+  if(error) {
+    alert("画像のアップロードに失敗しました。");
+    return;
+  }
+  form.image = data.path;
+  try {
+    const res = await $fetch('/api/post', {
+      method: 'POST',
+      body: form
+    })
+    posts.value.push(res);
+    form.title = '';
+    form.description = '';  
+    form.image = null;
+  }catch(e) {
+    if(e.response._data.statusCode === 422) {
+      const data = e.response._data.data;
+      data.forEach((d) => {
+        errors.value[d.context.label] = d.message
+      });
+    }
+
+    await supabase.storage.from("images").remove(data.path);
+  }
 }
 </script>
 <template>
   <div class="m-8">
     <form @submit.prevent="create" class="mb-8">
       <div class="mb-3">
-        <label for="">Title</label>
-        <input type="text" v-model="form.title" class="block border border-gray-400">
+        <InputLabel>Title</InputLabel>
+        <Input type="text" v-model="form.title" />
+        <InputError :error="errors.title" />
       </div>
       <div class="mb-3">
-        <label for="">Description</label>
-        <textarea v-model="form.description" cols="30" rows="10" class="block border border-gray-400"></textarea>
+        <InputLabel>Description</InputLabel>
+        <Textarea v-model="form.description" />
+        <InputError :error="errors.description" />
+      </div>
+      <div class="mb-3">
+        <InputLabel>Image</InputLabel>
+        <Input type="file" @change="imageUpload" />
+        <InputError :error="errors.image" />
       </div>
       <button type="submit" class="text-white bg-indigo-400 hover:bg-indigo-500 px-3 py-2 rounded">Submit</button>
     </form>
-    <hr>
-    <ul class="my-4">
-      <li v-for="post in posts" :key="post.id">{{ post.title }}</li>
-    </ul>
   </div>
 </template>
